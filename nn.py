@@ -1,5 +1,9 @@
 import numpy as np
 
+"""
+For now it's two layer network, but it can be modified to handle N layers
+"""
+
 
 class NeuralNetwork:
     """
@@ -45,6 +49,11 @@ class NeuralNetwork:
 
         return np.maximum(0, value)
 
+    def activation_function_derivative(self, value):
+        value[value<=0] = 0
+        value[value>0] = 1
+        return value
+
     def sigmoid(self, value):
         return 1 / (1 + np.exp(-value))
 
@@ -88,7 +97,9 @@ class NeuralNetwork:
         actual_inversion = 1 - self.y
         predicted_inversion = 1 - predicted
 
-        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(self.y, self.non_zero(predicted))
+        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(self.y,
+                                                                                                         self.non_zero(
+                                                                                                             predicted))
         loss_wrt_sigmoid = predicted * predicted_inversion
         loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
 
@@ -96,7 +107,7 @@ class NeuralNetwork:
         loss_wrt_w2 = self.params["A1"].T.dot(loss_wrt_z2)
         loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
 
-        loss_wrt_z1 = loss_wrt_A1 * self.activation_function(self.params["Z1"])
+        loss_wrt_z1 = loss_wrt_A1 * self.activation_function_derivative(self.params["Z1"])
         loss_wrt_w1 = self.X.T.dot(loss_wrt_z1)
         loss_wrt_b1 = np.sum(loss_wrt_z1, axis=0, keepdims=True)
 
@@ -132,3 +143,9 @@ class NeuralNetwork:
             self.backward_propagation(prediction)
             self.loss.append(loss)
 
+    def predict(self, X):
+        Z1 = X.dot(self.params["W1"]) + self.params["b1"]
+        A1 = self.activation_function(Z1)
+        Z2 = A1.dot(self.params["W2"]) + self.params["b2"]
+        predicted = self.sigmoid(Z2)
+        return np.round(predicted)
