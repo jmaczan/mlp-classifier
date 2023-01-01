@@ -117,3 +117,18 @@ class NeuralNetwork:
         self.params["b1"] = self.params["b1"] - self.learning_rate * loss_wrt_b1
         self.params["b2"] = self.params["b2"] - self.learning_rate * loss_wrt_b2
 
+    def fit(self, X, y):
+        """
+        Training phase
+        """
+
+        self.X = X
+        self.y = y
+        self.init_weights()
+        self.init_biases()
+
+        for iteration in range(self.iterations):
+            prediction, loss = self.forward_propagation()
+            self.backward_propagation(prediction)
+            self.loss.append(loss)
+
