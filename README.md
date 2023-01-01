@@ -47,7 +47,7 @@ It determines whether a neuron's contribution to the neural network should be ta
 
 ### Forward propagation
 
-It consists of the following steps:
+It is a training process for a network. It consists of the following steps:
 1. Multiply each input feature and randomly generated corresponding weight of the first layer, sum them up and add the bias
 2. Use this result as an input to activation function 
 3. Use the output from activation function as a features for the next weights and repeat this step until the last layer
@@ -55,3 +55,18 @@ It consists of the following steps:
 5. Compute the loss function by using last result (prediction) and actual (true) values 
 
 ### Backward propagation
+
+It is about learning process in neural network through improving network's weights and biases.
+
+A network checks the output for various weights and evaluates them using loss function. Decrease of loss means that weights are getting better
+
+Backpropagation uses derivatives of loss with respect to all previously calculated values - weights, biases and activation function results
+
+Input values are not differentiated
+
+Backward propagation steps:
+1. Derivative with respect to activation function $\frac{\partial L}{\partial a}$
+
+### Optimization
+
+It means looking for the best possible weights and biases in the network
