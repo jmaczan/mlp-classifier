@@ -64,8 +64,36 @@ Backpropagation uses derivatives of loss with respect to all previously calculat
 
 Input values are not differentiated
 
-Backward propagation steps:
-1. Derivative with respect to activation function $\frac{\partial L}{\partial a}$
+Backward propagation steps, based on Patrick David's [All the Backpropagation derivatives](https://medium.com/@pdquant/all-the-backpropagation-derivatives-d5275f727f60):
+1. Derivative with respect to (wrt) activation function $\frac{\partial L}{\partial a}$: 
+
+Derivative of the negative log likelihood function (cross-entropy):
+
+$$[yln(a) + (1-y)ln(1-a)] = $$
+$$[-yln(a) - (1-y)ln(1-a)] = $$
+$$\frac{\partial L}{\partial a} = [\frac{-y}{a} - (-)\frac{(1-y)}{(1-a)}]$$
+$$\frac{\partial L}{\partial a} = [\frac{-y}{a} + \frac{(1-y)}{(1-a)}]$$
+
+2. Derivative of sigmoid $\frac{\partial a}{\partial z}$:
+
+Derivative is 
+$$\frac{1}{1+e^{-z}} = ... = sig(z) * (1 - sig (z))$$
+
+3. Derivative wrt linear function
+
+Linear function is $z = W*X + b$, where $W$ represents weights, $X$ is input and $b$ is bias
+
+Derivative is $a - y$
+
+4. Derivative wrt weights $\frac{\partial z}{\partial w}$:
+
+$z = w^T*X + b$ 
+
+Derivative is $x$
+
+5. Derivative wrt bias $\frac{\partial L}{\partial b}$:
+
+Derivative is $a - y$
 
 ### Optimization
 
