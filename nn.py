@@ -44,3 +44,23 @@ class NeuralNetwork:
         """
 
         return np.maximum(0, value)
+
+    def sigmoid(self, value):
+        return 1/(1 + np.exp(-value))
+
+    def non_zero(self, value):
+        return np.maximum(value, 0.00000001)
+
+    '''
+    Using Cross-Entropy Loss function
+    https://ml-cheatsheet.readthedocs.io/en/latest/loss_functions.html#cross-entropy
+    '''
+    def cross_entropy_loss(self, actual, predicted):
+        actual_size = len(actual)
+        actual_inversion = 1 - actual
+        predicted_inversion = 1 - predicted
+        actual = self.non_zero(actual)
+        predicted = self.non_zero(predicted)
+
+        return -1
+
