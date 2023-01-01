@@ -1,7 +1,7 @@
 import numpy as np
 
 """
-For now it's two layer network, but it can be modified to handle N layers
+For now it's two layer network for binary classification task, but it can be modified to handle N layers
 """
 
 
