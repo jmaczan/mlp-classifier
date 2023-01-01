@@ -50,8 +50,8 @@ class NeuralNetwork:
         return np.maximum(0, value)
 
     def activation_function_derivative(self, value):
-        value[value<=0] = 0
-        value[value>0] = 1
+        value[value <= 0] = 0
+        value[value > 0] = 1
         return value
 
     def sigmoid(self, value):
