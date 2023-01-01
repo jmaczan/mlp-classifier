@@ -70,8 +70,11 @@ Backward propagation steps, based on Patrick David's [All the Backpropagation de
 Derivative of the negative log likelihood function (cross-entropy):
 
 $$[yln(a) + (1-y)ln(1-a)] = $$
+
 $$[-yln(a) - (1-y)ln(1-a)] = $$
+
 $$\frac{\partial L}{\partial a} = [\frac{-y}{a} - (-)\frac{(1-y)}{(1-a)}]$$
+
 $$\frac{\partial L}{\partial a} = [\frac{-y}{a} + \frac{(1-y)}{(1-a)}]$$
 
 2. Derivative of sigmoid $\frac{\partial a}{\partial z}$:
@@ -98,3 +101,10 @@ Derivative is $a - y$
 ### Optimization
 
 It means looking for the best possible weights and biases in the network
+
+### Training
+
+Repeat these three steps:
+1. Forward propagation
+2. Backward propagation
+3. Update weights with calculated gradients

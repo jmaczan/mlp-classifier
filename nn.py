@@ -83,3 +83,37 @@ class NeuralNetwork:
         self.params["A1"] = activation_function_result
 
         return predicted, loss
+
+    def backward_propagation(self, predicted):
+        actual_inversion = 1 - self.y
+        predicted_inversion = 1 - predicted
+
+        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(self.y, self.non_zero(predicted))
+        loss_wrt_sigmoid = predicted * predicted_inversion
+        loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
+
+        loss_wrt_A1 = loss_wrt_z2.dot(self.params["W2"].T)
+        loss_wrt_w2 = self.params["A1"].T.dot(loss_wrt_z2)
+        loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
+
+        loss_wrt_z1 = loss_wrt_A1 * self.activation_function(self.params["Z1"])
+        loss_wrt_w1 = self.X.T.dot(loss_wrt_z1)
+        loss_wrt_b1 = np.sum(loss_wrt_z1, axis=0, keepdims=True)
+
+        self.update_weights(loss_wrt_w1, loss_wrt_w2)
+        self.update_biases(loss_wrt_b1, loss_wrt_b2)
+
+    def update_weights(self, loss_wrt_w1, loss_wrt_w2):
+        """
+        Subtract the weight derivative * learning rate
+        """
+        self.params["W1"] = self.params["W1"] - self.learning_rate * loss_wrt_w1
+        self.params["W2"] = self.params["W2"] - self.learning_rate * loss_wrt_w2
+
+    def update_biases(self, loss_wrt_b1, loss_wrt_b2):
+        """
+        Subtract the bias derivative * learning rate
+        """
+        self.params["b1"] = self.params["b1"] - self.learning_rate * loss_wrt_b1
+        self.params["b2"] = self.params["b2"] - self.learning_rate * loss_wrt_b2
+
