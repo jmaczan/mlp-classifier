@@ -63,4 +63,10 @@ class NeuralNetwork:
         actual = self.non_zero(actual)
         predicted = self.non_zero(predicted)
 
-        return -1
+        # Combined loss
+        return -1 / actual_size * (
+            np.sum(
+                np.multiply(actual, np.log(predicted)) +
+                np.multiply(actual_inversion, np.log(predicted_inversion))
+            )
+        )
