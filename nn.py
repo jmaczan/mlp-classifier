@@ -70,3 +70,16 @@ class NeuralNetwork:
                 np.multiply(actual_inversion, np.log(predicted_inversion))
             )
         )
+
+    def forward_propagation(self):
+        first_layer_result = self.X.dot(self.params["W1"]) + self.params["b1"]
+        activation_function_result = self.activation_function(first_layer_result)
+        second_layer_result = activation_function_result.dot(self.params["W2"]) + self.params["b2"]
+        predicted = self.sigmoid(second_layer_result)
+        loss = self.cross_entropy_loss(self.y, predicted)
+
+        self.params["Z1"] = first_layer_result
+        self.params["Z2"] = second_layer_result
+        self.params["A1"] = activation_function_result
+
+        return predicted, loss
