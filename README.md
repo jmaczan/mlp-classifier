@@ -30,13 +30,13 @@ Number of nodes in the first layer equals number of features in the input data
 
 ### Last layer - output layer
 
-Number of nodes (variables) in output layer depends on type of desirted prediction
+Number of nodes (variables) in output layer depends on type of desired prediction
 
 ### Weight
 
-It represents how a given feature is important  
+It represents how a given feature is important. It is multiplied by a feature's value
 
 ### Bias
 
-It is a starting value for given neuron
+It is a starting value for a given neuron. It is added to sum of multiplications of weights and features values.
 
