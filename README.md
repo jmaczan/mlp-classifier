@@ -1,6 +1,6 @@
 # INF-Z-2023-Jedrzej-Maczan-285809
 
-[Neural network implementation](nn.py)
+[Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](nn.py)
 
 ## Report
 
