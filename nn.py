@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 """
 For now it's two layer network for binary classification task, but it can be modified to handle N layers
 """
@@ -149,3 +149,11 @@ class NeuralNetwork:
         Z2 = A1.dot(self.params["W2"]) + self.params["b2"]
         predicted = self.sigmoid(Z2)
         return np.round(predicted)
+
+
+    def plot_loss(self):
+        plt.plot(self.loss)
+        plt.xlabel("Iteration")
+        plt.ylabel("Loss")
+        plt.title("Loss per iteration")
+        plt.show()
