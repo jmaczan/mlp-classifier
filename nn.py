@@ -21,6 +21,7 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.params = {}  # weights and biases
+        self.biases = [None]*(len(layers)-1)
         self.loss = []
         self.sample_size = None
         self.X = None
@@ -50,7 +51,7 @@ class NeuralNetwork:
         """
         np.random.seed(42)
         for index, layer in enumerate(self.layers[:-1]):
-            self.params["b" + str(index + 1)] = np.random.randn(self.layers[index + 1], )
+            self.biases[index] = np.random.randn(self.layers[index + 1], )
 
     def activation_function(self, value):
         """
@@ -94,9 +95,9 @@ class NeuralNetwork:
         )
 
     def forward_propagation(self):
-        first_layer_result = self.X.dot(self.params["W1"]) + self.params["b1"]
+        first_layer_result = self.X.dot(self.params["W1"]) + self.biases[0]
         activation_function_result = self.activation_function(first_layer_result)
-        second_layer_result = activation_function_result.dot(self.params["W2"]) + self.params["b2"]
+        second_layer_result = activation_function_result.dot(self.params["W2"]) + self.biases[1]
         predicted = self.sigmoid(second_layer_result)
         loss = self.cross_entropy_loss(self.y, predicted)
 
@@ -138,8 +139,8 @@ class NeuralNetwork:
         """
         Subtract the bias derivative * learning rate
         """
-        self.params["b1"] = self.params["b1"] - self.learning_rate * loss_wrt_b1
-        self.params["b2"] = self.params["b2"] - self.learning_rate * loss_wrt_b2
+        self.biases[0] = self.biases[0] - self.learning_rate * loss_wrt_b1
+        self.biases[1] = self.biases[1] - self.learning_rate * loss_wrt_b2
 
     def fit(self, X, y):
         """
@@ -157,9 +158,9 @@ class NeuralNetwork:
             self.loss.append(loss)
 
     def predict(self, X):
-        Z1 = X.dot(self.params["W1"]) + self.params["b1"]
+        Z1 = X.dot(self.params["W1"]) + self.biases[0]
         A1 = self.activation_function(Z1)
-        Z2 = A1.dot(self.params["W2"]) + self.params["b2"]
+        Z2 = A1.dot(self.params["W2"]) + self.biases[1]
         predicted = self.sigmoid(Z2)
         return np.round(predicted)
 
