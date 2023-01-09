@@ -21,7 +21,8 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.params = {}  # weights and biases
-        self.biases = [None]*(len(layers)-1)
+        self.biases = [None] * (len(layers) - 1)
+        self.weights = [None] * (len(layers) - 1)
         self.loss = []
         self.sample_size = None
         self.X = None
@@ -43,7 +44,7 @@ class NeuralNetwork:
         """
         np.random.seed(777)
         for index, layer in enumerate(self.layers[:-1]):
-            self.params["W" + str(index + 1)] = np.random.randn(self.layers[index], self.layers[index + 1])
+            self.weights[index] = np.random.randn(self.layers[index], self.layers[index + 1])
 
     def init_biases(self):
         """
@@ -95,9 +96,9 @@ class NeuralNetwork:
         )
 
     def forward_propagation(self):
-        first_layer_result = self.X.dot(self.params["W1"]) + self.biases[0]
+        first_layer_result = self.X.dot(self.weights[0]) + self.biases[0]
         activation_function_result = self.activation_function(first_layer_result)
-        second_layer_result = activation_function_result.dot(self.params["W2"]) + self.biases[1]
+        second_layer_result = activation_function_result.dot(self.weights[1]) + self.biases[1]
         predicted = self.sigmoid(second_layer_result)
         loss = self.cross_entropy_loss(self.y, predicted)
 
@@ -117,7 +118,7 @@ class NeuralNetwork:
         loss_wrt_sigmoid = predicted * predicted_inversion
         loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
 
-        loss_wrt_A1 = loss_wrt_z2.dot(self.params["W2"].T)
+        loss_wrt_A1 = loss_wrt_z2.dot(self.weights[1].T)
         loss_wrt_w2 = self.params["A1"].T.dot(loss_wrt_z2)
         loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
 
@@ -132,8 +133,8 @@ class NeuralNetwork:
         """
         Subtract the weight derivative * learning rate
         """
-        self.params["W1"] = self.params["W1"] - self.learning_rate * loss_wrt_w1
-        self.params["W2"] = self.params["W2"] - self.learning_rate * loss_wrt_w2
+        self.weights[0] = self.weights[0] - self.learning_rate * loss_wrt_w1
+        self.weights[1] = self.weights[1] - self.learning_rate * loss_wrt_w2
 
     def update_biases(self, loss_wrt_b1, loss_wrt_b2):
         """
@@ -158,9 +159,9 @@ class NeuralNetwork:
             self.loss.append(loss)
 
     def predict(self, X):
-        Z1 = X.dot(self.params["W1"]) + self.biases[0]
+        Z1 = X.dot(self.weights[0]) + self.biases[0]
         A1 = self.activation_function(Z1)
-        Z2 = A1.dot(self.params["W2"]) + self.biases[1]
+        Z2 = A1.dot(self.weights[1]) + self.biases[1]
         predicted = self.sigmoid(Z2)
         return np.round(predicted)
 
