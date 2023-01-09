@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+
 """
-For now it's two layer network for binary classification task, but it can be modified to handle N layers
+N-layer Perceptron Artificial Neural Network for Classification
 """
 
 
@@ -13,7 +14,9 @@ class NeuralNetwork:
     iterations - int
     """
 
-    def __init__(self, layers=[13, 8, 1], learning_rate=0.001, iterations=100):
+    def __init__(self, layers, learning_rate=0.001, iterations=100):
+        self.validate_parameters(layers, learning_rate, iterations)
+
         self.layers = layers
         self.learning_rate = learning_rate
         self.iterations = iterations
@@ -23,21 +26,31 @@ class NeuralNetwork:
         self.X = None
         self.y = None
 
+    def validate_parameters(self, layers, learning_rate, iterations):
+        if len(layers) < 2 or layers is None:
+            raise Exception("Layers need to have at least two numbers")
+
+        if learning_rate <= 0 or learning_rate >= 1:
+            raise Exception("Learning rate should be a float between 0 and 1")
+
+        if iterations < 0:
+            raise Exception("Iterations should be a positive integer")
+
     def init_weights(self):
         """
         Default random weights, based on a uniform normal distribution
         """
         np.random.seed(777)
-        self.params["W1"] = np.random.randn(self.layers[0], self.layers[1])  # Array 13 x 8 for default layers
-        self.params["W2"] = np.random.randn(self.layers[1], self.layers[2])  # Array 8 x 1 (?) for default layers
+        for index, layer in enumerate(self.layers[:-1]):
+            self.params["W" + str(index + 1)] = np.random.randn(self.layers[index], self.layers[index + 1])
 
     def init_biases(self):
         """
         Default random biases, based on a uniform normal distribution
         """
         np.random.seed(42)
-        self.params["b1"] = np.random.randn(self.layers[1], )  # Vector of 8 elements for default layers
-        self.params["b2"] = np.random.randn(self.layers[2], )  # Single element vector, for defaults
+        for index, layer in enumerate(self.layers[:-1]):
+            self.params["b" + str(index + 1)] = np.random.randn(self.layers[index + 1], )
 
     def activation_function(self, value):
         """
@@ -149,7 +162,6 @@ class NeuralNetwork:
         Z2 = A1.dot(self.params["W2"]) + self.params["b2"]
         predicted = self.sigmoid(Z2)
         return np.round(predicted)
-
 
     def plot_loss(self):
         plt.plot(self.loss)
