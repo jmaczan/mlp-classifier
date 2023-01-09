@@ -20,7 +20,8 @@ class NeuralNetwork:
         self.layers = layers
         self.learning_rate = learning_rate
         self.iterations = iterations
-        self.params = {}  # weights and biases
+        self.computed_layer_sums = [0.0] * (len(layers) - 1)
+        self.computed_activation_functions = [0.0] * (len(layers) - 1)
         self.biases = [0.0] * (len(layers) - 1)
         self.weights = [0.0] * (len(layers) - 1)
         self.loss = []
@@ -107,9 +108,9 @@ class NeuralNetwork:
         predicted = self.sigmoid(second_layer_result)
         loss = self.cross_entropy_loss(self.y, predicted)
 
-        self.params["Z1"] = first_layer_result
-        self.params["Z2"] = second_layer_result
-        self.params["A1"] = activation_function_result
+        self.computed_layer_sums[0] = first_layer_result
+        self.computed_layer_sums[1] = second_layer_result
+        self.computed_activation_functions[0] = activation_function_result
 
         return predicted, loss
 
@@ -124,10 +125,10 @@ class NeuralNetwork:
         loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
 
         loss_wrt_A1 = loss_wrt_z2.dot(self.weights[1].T)
-        loss_wrt_w2 = self.params["A1"].T.dot(loss_wrt_z2)
+        loss_wrt_w2 = self.computed_activation_functions[0].T.dot(loss_wrt_z2)
         loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
 
-        loss_wrt_z1 = loss_wrt_A1 * self.activation_function_derivative(self.params["Z1"])
+        loss_wrt_z1 = loss_wrt_A1 * self.activation_function_derivative(self.computed_layer_sums[0])
         loss_wrt_w1 = self.X.T.dot(loss_wrt_z1)
         loss_wrt_b1 = np.sum(loss_wrt_z1, axis=0, keepdims=True)
 
