@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 """
-N-layer Perceptron Artificial Neural Network for Classification
+N-layer Perceptron Artificial Neural Network for Classification tasks
 """
 
 
@@ -21,14 +21,15 @@ class NeuralNetwork:
         self.learning_rate = learning_rate
         self.iterations = iterations
         self.params = {}  # weights and biases
-        self.biases = [None] * (len(layers) - 1)
-        self.weights = [None] * (len(layers) - 1)
+        self.biases = [0.0] * (len(layers) - 1)
+        self.weights = [0.0] * (len(layers) - 1)
         self.loss = []
         self.sample_size = None
         self.X = None
         self.y = None
 
-    def validate_parameters(self, layers, learning_rate, iterations):
+    @staticmethod
+    def validate_parameters(layers, learning_rate, iterations):
         if len(layers) < 2 or layers is None:
             raise Exception("Layers need to have at least two numbers")
 
@@ -54,7 +55,8 @@ class NeuralNetwork:
         for index, layer in enumerate(self.layers[:-1]):
             self.biases[index] = np.random.randn(self.layers[index + 1], )
 
-    def activation_function(self, value):
+    @staticmethod
+    def activation_function(value):
         """
         ReLU
         It receives a value from a layer, which is a sum of features multiplied by corresponding weights and with added
@@ -64,15 +66,18 @@ class NeuralNetwork:
 
         return np.maximum(0, value)
 
-    def activation_function_derivative(self, value):
+    @staticmethod
+    def activation_function_derivative(value):
         value[value <= 0] = 0
         value[value > 0] = 1
         return value
 
-    def sigmoid(self, value):
+    @staticmethod
+    def sigmoid(value):
         return 1 / (1 + np.exp(-value))
 
-    def non_zero(self, value):
+    @staticmethod
+    def non_zero(value):
         return np.maximum(value, 0.00000001)
 
     '''
