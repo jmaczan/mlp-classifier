@@ -120,37 +120,57 @@ class NeuralNetwork:
         actual_inversion = 1 - self.train_labels
         predicted_inversion = 1 - predicted
 
-        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(
-            self.train_labels,
-            self.non_zero(
-                predicted))
-        loss_wrt_sigmoid = predicted * predicted_inversion
-        loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
+        loss_layer_sums = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
+        loss_activation_functions = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
+        loss_layer_weights = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
+        loss_layer_biases = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
 
-        loss_wrt_A1 = loss_wrt_z2.dot(self.weights[1].T)
-        loss_wrt_w2 = self.computed_activation_functions[0].T.dot(loss_wrt_z2)
-        loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
+        layers = self.layers[:-1]
+        layers.reverse()
+        for index, layer in enumerate(layers):
+            if index == 0:  # last layer
+                loss_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(
+                    self.train_labels,
+                    self.non_zero(
+                        predicted))
+                loss_sigmoid = predicted * predicted_inversion
+                loss_layer_sums[0] = loss_predicted * loss_sigmoid
+                continue
 
-        loss_wrt_z1 = loss_wrt_A1 * self.activation_function_derivative(self.computed_layer_sums[0])
-        loss_wrt_w1 = self.train_set.T.dot(loss_wrt_z1)
-        loss_wrt_b1 = np.sum(loss_wrt_z1, axis=0, keepdims=True)
+            loss_activation_functions[index - 1] = loss_layer_sums[index - 1].dot(self.weights[index].T)
+            loss_layer_weights[index - 1] = self.computed_activation_functions[index - 1].T.dot(
+                loss_layer_sums[index - 1])
+            loss_layer_biases[index - 1] = np.sum(loss_layer_sums[index - 1], axis=0, keepdims=True)
+            loss_layer_sums[index] = loss_activation_functions[index - 1] * self.activation_function_derivative(
+                self.computed_layer_sums[index - 1])
 
-        self.update_weights(loss_wrt_w1, loss_wrt_w2)
-        self.update_biases(loss_wrt_b1, loss_wrt_b2)
+        loss_layer_weights[(len(loss_layer_weights) - 1)] = self.train_set.T.dot(
+            loss_layer_sums[(len(loss_layer_sums) - 1)])
+        loss_layer_biases[(len(loss_layer_biases) - 1)] = np.sum(loss_layer_sums[(len(loss_layer_sums) - 1)], axis=0,
+                                                                 keepdims=True)
 
-    def update_weights(self, loss_wrt_w1, loss_wrt_w2):
+        self.update_weights(loss_layer_weights)
+        self.update_biases(loss_layer_biases)
+
+    def update_weights(self, loss_layer_weights):
         """
         Subtract the weight with derivative * learning rate
         """
-        self.weights[0] = self.weights[0] - self.learning_rate * loss_wrt_w1
-        self.weights[1] = self.weights[1] - self.learning_rate * loss_wrt_w2
 
-    def update_biases(self, loss_wrt_b1, loss_wrt_b2):
+        weights = loss_layer_weights[::-1]
+
+        for index, weight in enumerate(weights):
+            self.weights[index] = self.weights[index] - self.learning_rate * weight
+
+    def update_biases(self, loss_layer_biases):
         """
         Subtract the bias with derivative * learning rate
         """
-        self.biases[0] = self.biases[0] - self.learning_rate * loss_wrt_b1
-        self.biases[1] = self.biases[1] - self.learning_rate * loss_wrt_b2
+
+        biases = loss_layer_biases[::-1]
+
+        for index, bias in enumerate(biases):
+            self.biases[index] = self.biases[index] - self.learning_rate * bias
 
     def fit(self, train_set, train_labels):
         """
