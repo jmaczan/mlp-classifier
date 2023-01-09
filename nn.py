@@ -25,9 +25,8 @@ class NeuralNetwork:
         self.biases = [0.0] * (len(layers) - 1)
         self.weights = [0.0] * (len(layers) - 1)
         self.loss = []
-        self.sample_size = None
-        self.X = None
-        self.y = None
+        self.train_set = None
+        self.train_labels = None
 
     @staticmethod
     def validate_parameters(layers, learning_rate, iterations):
@@ -59,7 +58,7 @@ class NeuralNetwork:
     @staticmethod
     def activation_function(value):
         """
-        ReLU
+        ReLU Activation Function
         It receives a value from a layer, which is a sum of features multiplied by corresponding weights and with added
             bias to this sum
         It returns value or 0 if a value is a negative value
@@ -102,11 +101,11 @@ class NeuralNetwork:
         )
 
     def forward_propagation(self):
-        first_layer_result = self.X.dot(self.weights[0]) + self.biases[0]
+        first_layer_result = self.train_set.dot(self.weights[0]) + self.biases[0]
         activation_function_result = self.activation_function(first_layer_result)
         second_layer_result = activation_function_result.dot(self.weights[1]) + self.biases[1]
         predicted = self.sigmoid(second_layer_result)
-        loss = self.cross_entropy_loss(self.y, predicted)
+        loss = self.cross_entropy_loss(self.train_labels, predicted)
 
         self.computed_layer_sums[0] = first_layer_result
         self.computed_layer_sums[1] = second_layer_result
@@ -115,12 +114,13 @@ class NeuralNetwork:
         return predicted, loss
 
     def backward_propagation(self, predicted):
-        actual_inversion = 1 - self.y
+        actual_inversion = 1 - self.train_labels
         predicted_inversion = 1 - predicted
 
-        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(self.y,
-                                                                                                         self.non_zero(
-                                                                                                             predicted))
+        loss_wrt_predicted = np.divide(actual_inversion, self.non_zero(predicted_inversion)) - np.divide(
+            self.train_labels,
+            self.non_zero(
+                predicted))
         loss_wrt_sigmoid = predicted * predicted_inversion
         loss_wrt_z2 = loss_wrt_predicted * loss_wrt_sigmoid
 
@@ -129,7 +129,7 @@ class NeuralNetwork:
         loss_wrt_b2 = np.sum(loss_wrt_z2, axis=0, keepdims=True)
 
         loss_wrt_z1 = loss_wrt_A1 * self.activation_function_derivative(self.computed_layer_sums[0])
-        loss_wrt_w1 = self.X.T.dot(loss_wrt_z1)
+        loss_wrt_w1 = self.train_set.T.dot(loss_wrt_z1)
         loss_wrt_b1 = np.sum(loss_wrt_z1, axis=0, keepdims=True)
 
         self.update_weights(loss_wrt_w1, loss_wrt_w2)
@@ -149,13 +149,13 @@ class NeuralNetwork:
         self.biases[0] = self.biases[0] - self.learning_rate * loss_wrt_b1
         self.biases[1] = self.biases[1] - self.learning_rate * loss_wrt_b2
 
-    def fit(self, X, y):
+    def fit(self, train_set, train_labels):
         """
         Training phase
         """
 
-        self.X = X
-        self.y = y
+        self.train_set = train_set
+        self.train_labels = train_labels
         self.init_weights()
         self.init_biases()
 
@@ -164,16 +164,16 @@ class NeuralNetwork:
             self.backward_propagation(prediction)
             self.loss.append(loss)
 
-    def predict(self, X):
-        Z1 = X.dot(self.weights[0]) + self.biases[0]
-        A1 = self.activation_function(Z1)
-        Z2 = A1.dot(self.weights[1]) + self.biases[1]
-        predicted = self.sigmoid(Z2)
-        return np.round(predicted)
+    def predict(self, train_set):
+        computed_first_layer_sum = train_set.dot(self.weights[0]) + self.biases[0]
+        computed_first_activation_function = self.activation_function(computed_first_layer_sum)
+        computed_second_layer_sum = computed_first_activation_function.dot(self.weights[1]) + self.biases[1]
+        computed_output_activation_function = self.sigmoid(computed_second_layer_sum)
+        return np.round(computed_output_activation_function)
 
     def plot_loss(self):
         plt.plot(self.loss)
+        plt.title("Loss per iteration")
         plt.xlabel("Iteration")
         plt.ylabel("Loss")
-        plt.title("Loss per iteration")
         plt.show()
