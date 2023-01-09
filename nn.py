@@ -20,8 +20,8 @@ class NeuralNetwork:
         self.layers = layers
         self.learning_rate = learning_rate
         self.iterations = iterations
-        self.computed_layer_sums = [0.0] * (len(layers) - 1)
-        self.computed_activation_functions = [0.0] * (len(layers) - 1)
+        self.computed_layer_sums = np.array([None] * (len(layers) - 1))
+        self.computed_activation_functions = np.array([None] * (len(layers) - 1))
         self.biases = [0.0] * (len(layers) - 1)
         self.weights = [0.0] * (len(layers) - 1)
         self.loss = []
@@ -101,15 +101,18 @@ class NeuralNetwork:
         )
 
     def forward_propagation(self):
-        first_layer_result = self.train_set.dot(self.weights[0]) + self.biases[0]
-        activation_function_result = self.activation_function(first_layer_result)
-        second_layer_result = activation_function_result.dot(self.weights[1]) + self.biases[1]
-        predicted = self.sigmoid(second_layer_result)
-        loss = self.cross_entropy_loss(self.train_labels, predicted)
+        for index, layer in enumerate(self.layers[:-1]):
+            if index == 0:
+                self.computed_layer_sums[index] = self.train_set.dot(self.weights[index]) + self.biases[index]
+                continue
 
-        self.computed_layer_sums[0] = first_layer_result
-        self.computed_layer_sums[1] = second_layer_result
-        self.computed_activation_functions[0] = activation_function_result
+            activation_function_result = self.activation_function(self.computed_layer_sums[index - 1])
+            self.computed_activation_functions[index - 1] = activation_function_result
+
+            self.computed_layer_sums[index] = activation_function_result.dot(self.weights[index]) + self.biases[index]
+
+        predicted = self.sigmoid(self.computed_layer_sums[(len(self.computed_layer_sums) - 1)])
+        loss = self.cross_entropy_loss(self.train_labels, predicted)
 
         return predicted, loss
 
@@ -137,14 +140,14 @@ class NeuralNetwork:
 
     def update_weights(self, loss_wrt_w1, loss_wrt_w2):
         """
-        Subtract the weight derivative * learning rate
+        Subtract the weight with derivative * learning rate
         """
         self.weights[0] = self.weights[0] - self.learning_rate * loss_wrt_w1
         self.weights[1] = self.weights[1] - self.learning_rate * loss_wrt_w2
 
     def update_biases(self, loss_wrt_b1, loss_wrt_b2):
         """
-        Subtract the bias derivative * learning rate
+        Subtract the bias with derivative * learning rate
         """
         self.biases[0] = self.biases[0] - self.learning_rate * loss_wrt_b1
         self.biases[1] = self.biases[1] - self.learning_rate * loss_wrt_b2
