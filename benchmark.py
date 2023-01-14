@@ -29,7 +29,22 @@ print(f"Train labels: {ytrain.shape}")
 print(f"Test set: {Xtest.shape}")
 print(f"Test labels: {ytest.shape}")
 
+neural_network = nn.NeuralNetwork([13, 1], iterations=10)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Loss: {neural_network.loss}")
+
+neural_network = nn.NeuralNetwork([13, 1], iterations=100)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Loss: {neural_network.loss}")
+
 neural_network = nn.NeuralNetwork([13, 8, 1])
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Loss: {neural_network.loss}")
+
+neural_network = nn.NeuralNetwork([13, 8, 1], iterations=1000)
 neural_network.fit(Xtrain, ytrain)
 neural_network.plot_loss()
 print(f"Loss: {neural_network.loss}")
