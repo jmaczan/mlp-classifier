@@ -188,11 +188,17 @@ class NeuralNetwork:
             self.loss.append(loss)
 
     def predict(self, train_set):
-        computed_first_layer_sum = train_set.dot(self.weights[0]) + self.biases[0]
-        computed_first_activation_function = self.activation_function(computed_first_layer_sum)
-        computed_second_layer_sum = computed_first_activation_function.dot(self.weights[1]) + self.biases[1]
-        computed_output_activation_function = self.sigmoid(computed_second_layer_sum)
-        return np.round(computed_output_activation_function)
+        for index, layer in enumerate(self.layers[:-1]):
+            if index == 0:
+                self.computed_layer_sums[index] = self.train_set.dot(self.weights[index]) + self.biases[index]
+                continue
+
+            activation_function_result = self.activation_function(self.computed_layer_sums[index - 1])
+            self.computed_activation_functions[index - 1] = activation_function_result
+
+            self.computed_layer_sums[index] = activation_function_result.dot(self.weights[index]) + self.biases[index]
+
+        return np.round(self.sigmoid(self.computed_layer_sums[(len(self.computed_layer_sums) - 1)]))
 
     def plot_loss(self):
         plt.plot(self.loss)
