@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-import nn
+from nn import NeuralNetwork
 
 headers = ['age', 'sex', 'chest_pain', 'resting_blood_pressure',
            'serum_cholestoral', 'fasting_blood_sugar', 'resting_ecg_results',
@@ -34,22 +34,47 @@ print(f"Train labels: {ytrain.shape}")
 print(f"Test set: {Xtest.shape}")
 print(f"Test labels: {ytest.shape}")
 
-neural_network = nn.NeuralNetwork([13, 1], iterations=10)
+neural_network = NeuralNetwork(layers=[13, 1], iterations=10)
 neural_network.fit(Xtrain, ytrain)
 neural_network.plot_loss()
 print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
 
-neural_network = nn.NeuralNetwork([13, 1], iterations=100)
+neural_network = NeuralNetwork(layers=[13, 1], iterations=100)
 neural_network.fit(Xtrain, ytrain)
 neural_network.plot_loss()
 print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
 
-neural_network = nn.NeuralNetwork([13, 8, 1])
+neural_network = NeuralNetwork(layers=[13, 1], iterations=1000)
 neural_network.fit(Xtrain, ytrain)
 neural_network.plot_loss()
 print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
 
-neural_network = nn.NeuralNetwork([13, 8, 1], iterations=1000)
+neural_network = NeuralNetwork(layers=[13, 8, 1])
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+
+neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=100)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+
+neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=1000)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+
+neural_network = NeuralNetwork(layers=[13, 8, 1], learning_rate=0.1)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+
+neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
+neural_network.fit(Xtrain, ytrain)
+neural_network.plot_loss()
+print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+
+neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=1000, learning_rate=0.1)
 neural_network.fit(Xtrain, ytrain)
 neural_network.plot_loss()
 print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
