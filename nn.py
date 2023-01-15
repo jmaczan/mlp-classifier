@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy import isin
 
 """
 N-layer Perceptron Artificial Neural Network for Classification tasks
@@ -187,10 +188,10 @@ class NeuralNetwork:
             self.backward_propagation(prediction)
             self.loss.append(loss)
 
-    def predict(self, train_set):
+    def predict(self, data):
         for index, layer in enumerate(self.layers[:-1]):
             if index == 0:
-                self.computed_layer_sums[index] = self.train_set.dot(self.weights[index]) + self.biases[index]
+                self.computed_layer_sums[index] = data.dot(self.weights[index]) + self.biases[index]
                 continue
 
             activation_function_result = self.activation_function(self.computed_layer_sums[index - 1])
@@ -199,6 +200,27 @@ class NeuralNetwork:
             self.computed_layer_sums[index] = activation_function_result.dot(self.weights[index]) + self.biases[index]
 
         return np.round(self.sigmoid(self.computed_layer_sums[(len(self.computed_layer_sums) - 1)]))
+
+    def accuracy(self, actual, predicted):
+        # def bool_to_int(item):
+        #     if isinstance(item, np.ndarray):
+        #         return bool_to_int(item[0])
+        #     else:
+        #         # print(item)
+        #         # print(int(item))
+        #         return int(item)
+        # actual = list(map(bool_to_int, actual))
+        # predicted = list(map(bool_to_int, predicted))
+        # print(actual.values)
+        # print(predicted.values)
+
+        # comparison = map(bool_to_int, actual == predicted)
+        # print(comparison)
+        # comparison = actual == predicted
+        # print(comparison)
+        # comparison = comparison[0]
+        # print(comparison)
+        return int(sum(actual == predicted) / len(actual) * 100)
 
     def plot_loss(self):
         plt.plot(self.loss)

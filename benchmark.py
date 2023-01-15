@@ -34,47 +34,37 @@ print(f"Train labels: {ytrain.shape}")
 print(f"Test set: {Xtest.shape}")
 print(f"Test labels: {ytest.shape}")
 
-neural_network = NeuralNetwork(layers=[13, 1], iterations=10)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
 
-neural_network = NeuralNetwork(layers=[13, 1], iterations=100)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+class Benchmark:
+    def __init__(self, layers, learning_rate=0.001, iterations=100):
+        neural_network = NeuralNetwork(layers, learning_rate, iterations)
+        neural_network.fit(Xtrain, ytrain)
+        neural_network.plot_loss()
+        train_prediction = neural_network.predict(Xtrain)
+        test_prediction = neural_network.predict(Xtest)
+        print(f"""Layers: {layers},
+Iterations: {iterations},
+Learning rate: {learning_rate},
+Lowest loss: {lowest_loss(neural_network.loss)},
+Accuracy for train set: {neural_network.accuracy(ytrain, train_prediction)},
+Accuracy for test set: {neural_network.accuracy(ytest, test_prediction)}""")
 
-neural_network = NeuralNetwork(layers=[13, 1], iterations=1000)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
 
-neural_network = NeuralNetwork(layers=[13, 8, 1])
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+# how iterations affect results
+# Benchmark(layers=[13, 8, 1], iterations=10)
+# Benchmark(layers=[13, 8, 1], iterations=100)
+# Benchmark(layers=[13, 8, 1], iterations=500)
+# Benchmark(layers=[13, 8, 1], iterations=1000)
 
-neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=100)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
-
-neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=1000)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
-
-neural_network = NeuralNetwork(layers=[13, 8, 1], learning_rate=0.1)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
-
-neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
-
-neural_network = NeuralNetwork(layers=[13, 8, 1], iterations=1000, learning_rate=0.1)
-neural_network.fit(Xtrain, ytrain)
-neural_network.plot_loss()
-print(f"Lowest loss: {lowest_loss(neural_network.loss)}")
+# how layers affect results
+# Benchmark(layers=[13, 1], iterations=100)
+# Benchmark(layers=[13, 3, 1], iterations=100)
+# Benchmark(layers=[13, 8, 1], iterations=100)
+# Benchmark(layers=[13, 8, 8, 1], iterations=100)
+#
+# # how learning rate affects results
+Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.9999)
+# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
+# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.01)
+# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.001)
+# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.0001)
