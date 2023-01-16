@@ -1,5 +1,7 @@
 import pandas as pd
+from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from nn import NeuralNetwork
 
@@ -34,6 +36,12 @@ print(f"Train labels: {ytrain.shape}")
 print(f"Test set: {Xtest.shape}")
 print(f"Test labels: {ytest.shape}")
 
+mlp_clf = MLPClassifier(hidden_layer_sizes=(13, 8), max_iter=100, tol=0.1)
+prediction = mlp_clf.predict(Xtest)
+train_pred = mlp_clf.predict(Xtrain)
+print('Test accuracy', metrics.accuracy_score(prediction, ytest))
+print('Train accuracy:', metrics.accuracy_score(train_pred, ytrain))
+
 
 class Benchmark:
     def __init__(self, layers, learning_rate=0.001, iterations=100):
@@ -51,20 +59,20 @@ Accuracy for test set: {neural_network.accuracy(ytest, test_prediction)}""")
 
 
 # how iterations affect results
-# Benchmark(layers=[13, 8, 1], iterations=10)
-# Benchmark(layers=[13, 8, 1], iterations=100)
-# Benchmark(layers=[13, 8, 1], iterations=500)
-# Benchmark(layers=[13, 8, 1], iterations=1000)
+Benchmark(layers=[13, 8, 1], iterations=10)
+Benchmark(layers=[13, 8, 1], iterations=100)
+Benchmark(layers=[13, 8, 1], iterations=500)
+Benchmark(layers=[13, 8, 1], iterations=1000)
 
 # how layers affect results
-# Benchmark(layers=[13, 1], iterations=100)
-# Benchmark(layers=[13, 3, 1], iterations=100)
-# Benchmark(layers=[13, 8, 1], iterations=100)
-# Benchmark(layers=[13, 8, 8, 1], iterations=100)
-#
-# # how learning rate affects results
+Benchmark(layers=[13, 1], iterations=100)
+Benchmark(layers=[13, 3, 1], iterations=100)
+Benchmark(layers=[13, 8, 1], iterations=100)
+Benchmark(layers=[13, 8, 8, 1], iterations=100)
+
+# how learning rate affects results
 Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.9999)
-# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
-# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.01)
-# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.001)
-# Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.0001)
+Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
+Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.01)
+Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.001)
+Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.0001)

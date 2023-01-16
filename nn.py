@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from numpy import isin
 
 """
 N-layer Perceptron Artificial Neural Network for Classification tasks
@@ -41,30 +40,17 @@ class NeuralNetwork:
             raise Exception("Iterations should be a positive integer")
 
     def init_weights(self):
-        """
-        Default random weights, based on a uniform normal distribution
-        """
         np.random.seed(777)
         for index, layer in enumerate(self.layers[:-1]):
             self.weights[index] = np.random.randn(self.layers[index], self.layers[index + 1])
 
     def init_biases(self):
-        """
-        Default random biases, based on a uniform normal distribution
-        """
         np.random.seed(42)
         for index, layer in enumerate(self.layers[:-1]):
             self.biases[index] = np.random.randn(self.layers[index + 1], )
 
     @staticmethod
     def activation_function(value):
-        """
-        ReLU Activation Function
-        It receives a value from a layer, which is a sum of features multiplied by corresponding weights and with added
-            bias to this sum
-        It returns value or 0 if a value is a negative value
-        """
-
         return np.maximum(0, value)
 
     @staticmethod
@@ -121,10 +107,11 @@ class NeuralNetwork:
         actual_inversion = 1 - self.train_labels
         predicted_inversion = 1 - predicted
 
-        loss_layer_sums = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
-        loss_activation_functions = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
-        loss_layer_weights = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
-        loss_layer_biases = np.array([None] * (len(self.layers) - 1))  # in reversed order - from last to first
+        # in reversed order - from last to first
+        loss_layer_sums = np.array([None] * (len(self.layers) - 1))
+        loss_activation_functions = np.array([None] * (len(self.layers) - 1))
+        loss_layer_weights = np.array([None] * (len(self.layers) - 1))
+        loss_layer_biases = np.array([None] * (len(self.layers) - 1))
 
         layers = self.layers[:-1]
         layers.reverse()
@@ -174,10 +161,6 @@ class NeuralNetwork:
             self.biases[index] = self.biases[index] - self.learning_rate * bias
 
     def fit(self, train_set, train_labels):
-        """
-        Training phase
-        """
-
         self.train_set = train_set
         self.train_labels = train_labels
         self.init_weights()
@@ -201,28 +184,11 @@ class NeuralNetwork:
 
         return np.round(self.sigmoid(self.computed_layer_sums[(len(self.computed_layer_sums) - 1)]))
 
-    def accuracy(self, actual, predicted):
-        # def bool_to_int(item):
-        #     if isinstance(item, np.ndarray):
-        #         return bool_to_int(item[0])
-        #     else:
-        #         # print(item)
-        #         # print(int(item))
-        #         return int(item)
-        # actual = list(map(bool_to_int, actual))
-        # predicted = list(map(bool_to_int, predicted))
-        # print(actual.values)
-        # print(predicted.values)
-
-        # comparison = map(bool_to_int, actual == predicted)
-        # print(comparison)
-        # comparison = actual == predicted
-        # print(comparison)
-        # comparison = comparison[0]
-        # print(comparison)
+    @staticmethod
+    def accuracy(actual, predicted):
         return int(sum(actual == predicted) / len(actual) * 100)
 
-    def plot_loss(self):
+    def plot(self):
         plt.plot(self.loss)
         plt.title("Loss per iteration")
         plt.xlabel("Iteration")
