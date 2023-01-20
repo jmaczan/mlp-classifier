@@ -37,6 +37,7 @@ print(f"Test set: {Xtest.shape}")
 print(f"Test labels: {ytest.shape}")
 
 mlp_clf = MLPClassifier(hidden_layer_sizes=(13, 8), max_iter=100, tol=0.1)
+mlp_clf.fit(Xtrain, ytrain)
 prediction = mlp_clf.predict(Xtest)
 train_pred = mlp_clf.predict(Xtrain)
 print('Test accuracy', metrics.accuracy_score(prediction, ytest))
@@ -47,7 +48,7 @@ class Benchmark:
     def __init__(self, layers, learning_rate=0.001, iterations=100):
         neural_network = NeuralNetwork(layers, learning_rate, iterations)
         neural_network.fit(Xtrain, ytrain)
-        neural_network.plot_loss()
+        neural_network.plot()
         train_prediction = neural_network.predict(Xtrain)
         test_prediction = neural_network.predict(Xtest)
         print(f"""Layers: {layers},
@@ -68,7 +69,10 @@ Benchmark(layers=[13, 8, 1], iterations=1000)
 Benchmark(layers=[13, 1], iterations=100)
 Benchmark(layers=[13, 3, 1], iterations=100)
 Benchmark(layers=[13, 8, 1], iterations=100)
-Benchmark(layers=[13, 8, 8, 1], iterations=100)
+Benchmark(layers=[13, 13, 1], iterations=100)
+Benchmark(layers=[13, 30, 1], iterations=100)
+Benchmark(layers=[13, 50, 1], iterations=100)
+Benchmark(layers=[13, 100, 1], iterations=100)
 
 # how learning rate affects results
 Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.9999)
@@ -76,3 +80,6 @@ Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.1)
 Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.01)
 Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.001)
 Benchmark(layers=[13, 8, 1], iterations=100, learning_rate=0.0001)
+
+Benchmark(layers=[13, 1], iterations=1000, learning_rate=0.01)
+Benchmark(layers=[13, 1], iterations=10000, learning_rate=0.01)
