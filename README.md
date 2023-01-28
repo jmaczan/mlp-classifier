@@ -2,7 +2,7 @@
 
 # Multi-Layer Perceptron Classifier 🤗
 
-[Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](nn.py)
+[Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](neural_network.py)
 
 ## About
 
