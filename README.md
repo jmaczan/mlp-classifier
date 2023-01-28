@@ -1,8 +1,8 @@
-# INF-Z-2023-Jedrzej-Maczan-285809
+# Multi-Layer Perceptron Classifier 🤗
 
 [Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](nn.py)
 
-## Report
+## About
 
 ### Neuron
 
@@ -108,3 +108,17 @@ Repeat these three steps:
 1. Forward propagation
 2. Backward propagation
 3. Update weights with calculated gradients
+
+
+## Resources
+When implementing the network, I based on these great online resources:
+- https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
+- https://medium.com/@pdquant/all-the-backpropagation-derivatives-d5275f727f60
+- https://heartbeat.comet.ml/building-a-neural-network-from-scratch-using-python-part-1-6d399df8d432
+- https://heartbeat.comet.ml/building-a-neural-network-from-scratch-using-python-part-2-testing-the-network-c1f0c1c9cbb0
+- https://medium.com/technology-invention-and-more/how-to-build-a-simple-neural-network-in-9-lines-of-python-code-cc8f23647ca1
+- https://medium.com/technology-invention-and-more/how-to-build-a-multi-layered-neural-network-in-python-53ec3d1d326a
+
+## Author
+
+© Copyright [Jędrzej Paweł Maczan](https://maczan.pl/). Made in [Poland](https://en.wikipedia.org/wiki/Poland), 2022 - 2023
