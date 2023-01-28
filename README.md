@@ -1,3 +1,5 @@
+<p align="center"><img width="150" src="MLP-Classifier.png" alt="MLP-Classifier"></p>
+
 # Multi-Layer Perceptron Classifier 🤗
 
 [Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](nn.py)
@@ -108,7 +110,6 @@ Repeat these three steps:
 1. Forward propagation
 2. Backward propagation
 3. Update weights with calculated gradients
-
 
 ## Resources
 When implementing the network, I based on these great online resources:
