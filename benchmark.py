@@ -3,7 +3,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
-from nn import NeuralNetwork
+from neural_network import NeuralNetwork
 
 headers = ['age', 'sex', 'chest_pain', 'resting_blood_pressure',
            'serum_cholestoral', 'fasting_blood_sugar', 'resting_ecg_results',
