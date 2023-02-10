@@ -2,7 +2,7 @@
 
 # Multi-Layer Perceptron Classifier 🤗
 
-[Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](neural_network.py)
+[Implementation of Multi-Layer Perceptron Artificial Neural Network in Python 3](neural_network.py). Heavily inspired by [Rising Odegua's MLP articles and Patrick David's All the Backpropagation derivatives](#resources)
 
 ## About
 
